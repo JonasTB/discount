@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const CoursesSchema = new mongoose.Schema({
     course: {
         type: String,
+        lowercase: true,
         required: true,
     },
 
@@ -18,7 +19,7 @@ const CoursesSchema = new mongoose.Schema({
 
     discount: {
         type: String,
-        required: true,
+        required: false,
     }
 }, { timestamps: true });
 
