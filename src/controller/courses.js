@@ -6,7 +6,7 @@ module.exports = {
 
         try {
             const calcPercent = (( percent / 100 ) * parseFloat(full.replace(".", "").replace(",","."))).toFixed(2);
-            const discount = (parseFloat(full.replace(".", "").replace(",",".")) - calcPercent).toFixed(2);
+            const discount = Intl.NumberFormat('de-DE').format((parseFloat(full.replace(".", "").replace(",",".")) - calcPercent).toFixed(2));
             const courseRegister = await Courses.create({ course, percent, full, discount });
 
             return res.status(201).send(courseRegister);

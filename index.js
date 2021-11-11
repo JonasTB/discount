@@ -6,6 +6,10 @@ const dotenv = require('dotenv');
 // connect db
 const connectDB = require('./src/database/db');
 
+// default admin user
+const Seeds = require('./src/util/seeds');
+Seeds.defaultAdmin();
+
 // variables environment
 require('dotenv').config;
 dotenv.config({ path: 'config.env' });
