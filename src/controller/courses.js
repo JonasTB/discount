@@ -3,12 +3,18 @@ const Courses = require('../model/courses');
 module.exports = {
     create: async (req, res) => {
         const { course, percent, full } = req.body;
-
         try {
-            const calcPercent = (( percent / 100 ) * parseFloat(full.replace(".", "").replace(",","."))).toFixed(2);
-            const discount = Intl.NumberFormat('de-DE').format((parseFloat(full.replace(".", "").replace(",",".")) - calcPercent).toFixed(2));
-            const courseRegister = await Courses.create({ course, percent, full, discount });
+            const calcPercent = ((percent / 100) * parseFloat(full.replace(".", "").replace(",", "."))).toFixed(2);
+            const discount = Intl.NumberFormat('de-DE').format((parseFloat(full.replace(".", "").replace(",", ".")) - calcPercent).toFixed(2));
 
+            if (parseFloat(full) == 0) {
+                const full = "0,00"
+                const discount = "0,00"
+                const courseRegister = await Courses.create({ course, percent, full, discount });
+                return res.status(201).send(courseRegister);
+            }
+
+            const courseRegister = await Courses.create({ course, percent, full, discount });
             return res.status(201).send(courseRegister);
         } catch (err) {
             res.status(400).send({ error: 'Failed register course' });
@@ -30,9 +36,7 @@ module.exports = {
 
     getOne: async (req, res) => {
         const _id = req.params.id;
-
         try {
-
             if (!_id)
                 return res.status(404).send({ error: 'Course does not exist to be returned' });
 
@@ -40,7 +44,6 @@ module.exports = {
 
             return res.status(200).send(courseGetOne);
         } catch (err) {
-            console.log(err);
             return res.status(400).send({ error: 'Failed get one course' });
         }
     },
@@ -51,7 +54,6 @@ module.exports = {
         try {
             if (!_id)
                 return res.status(404).send({ error: 'Course does not exist to be updated' });
-
 
             const courseUpdate = await Courses.findByIdAndUpdate(_id, update, { new: true });
 
@@ -64,7 +66,6 @@ module.exports = {
     delete: async (req, res) => {
         const _id = req.params.id;
         try {
-
             if (!_id)
                 return res.status(404).send({ error: 'Course does not exist to be deleted' });
             await Courses.findByIdAndDelete(_id);
